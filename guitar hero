@@ -1,0 +1,95 @@
+int led_red = 3;
+int led_blue = 5;
+int led_yellow = 7;
+int leds[3] = {led_red, led_blue, led_yellow};
+int led;
+int pontos;
+int botao_red = 2;
+int botao_blue = 4;
+int botao_yellow = 6;
+int botoes[3] = {botao_red, botao_blue, botao_yellow};
+int botao;
+int estado;
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27,2,1,0,4,5,6,7,3, POSITIVE);
+
+
+void setup () {
+  pinMode(led_red, OUTPUT);
+  pinMode(led_blue, OUTPUT);
+  pinMode(led_yellow, OUTPUT);
+  pinMode(botao_red, INPUT);
+  pinMode(botao_blue, INPUT);
+  pinMode(botao_yellow, INPUT);
+
+  pontos = 0;
+ lcd.begin (16,2);
+
+}
+
+void loop () {
+
+  lcd.setBacklight(HIGH);
+  lcd.setCursor(0,0);
+  lcd.print("Pontos");
+  lcd.setCursor(0,1);
+  lcd.print(pontos);
+  led = random(3);
+
+  digitalWrite(leds[led], HIGH);
+
+  delay(300);
+
+  estado = digitalRead(botoes[led]);
+
+  if (estado == HIGH) {
+    pontos = pontos + 5;
+    Serial.println(pontos);
+     digitalWrite(leds[led], LOW);
+  }
+
+  else {
+    delay(300);
+
+    estado = digitalRead(botoes[led]);
+
+    if (estado == HIGH) {
+      pontos = pontos + 3;
+      Serial.println(pontos);
+           digitalWrite(leds[led], LOW);
+    }
+
+    else {
+      delay(300);
+
+      estado = digitalRead(botoes[led]);
+
+      if (estado == HIGH) {
+        pontos = pontos + 2;
+        Serial.println(pontos);
+             digitalWrite(leds[led], LOW);
+      }
+
+      else {
+        delay(600);
+
+        estado = digitalRead(botoes[led]);
+
+        if (estado == HIGH) {
+          pontos = pontos + 1;
+          Serial.println(pontos);
+               digitalWrite(leds[led], LOW);
+        }
+
+        else {
+          pontos = pontos - 1;
+          Serial.println(pontos);
+                         digitalWrite(leds[led], LOW);
+
+        }
+      }
+    }
+  }
+
+}
